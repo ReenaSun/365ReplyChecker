@@ -63,12 +63,21 @@ function Connect-Exchange {
 }
 
 function Start-Report {
+    #initialize response variable
+    $skip = $null
 
     #skip to Set-AutoReplyState function
+    while($skip -ne 'y' -and $skip -ne 'n') {
     $skip = Read-Host "Do you want to skip the report and go directly to enabling/disabling auto-reply on a specific mailbox? (Enter 'y' or 'n')"
     if ($skip -eq 'y') {
         return
     } elseif ($skip -eq 'n') {
+        #continue
+    } else {
+        write-host "Invalid input. Please enter 'y' or 'n'"
+    }
+    }
+        
         # Get the list of mailboxes
     Write-Host "Retrieving mailboxes..."
     $mailboxes = Get-Mailbox -ResultSize Unlimited | Select-Object PrimarySmtpAddress
@@ -166,6 +175,7 @@ function Set-AutoReplyState {
     }
 }
 
+# Main script
 Start-Prereqs
 Connect-Exchange
 Start-Report
